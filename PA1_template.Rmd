@@ -1,20 +1,58 @@
 # Reproducible Research: Peer Assessment 1
-
+========================================================
 
 ## Loading and preprocessing the data
+```{r}
+#load the data
+activity <- read.csv("./activity/activity.csv") #E:/GoogleDrive/Coursera/Reproducible Research/RepData_PeerAssessment1/
+
+#process the data
+activity$date<-as.Date(activity$date)
+t<-seq(from=0,to=1435, by=5)
+activity$interval<-rep(t,61)
 
 
+```
 
-## What is mean total number of steps taken per day?
+## What is the mean total number of steps taken per day?
 
+```{r fig.width=7, fig.height=6}
+c<-tapply(activity$steps,activity$date,FUN=sum)
+hist(c)
+```
 
+```{r}
+mean<-mean(c,na.rm=TRUE)
+median<-median(c,na.rm=TRUE)
+mean
+median
+```
 
 ## What is the average daily activity pattern?
 
+```{r}
+act<-activity[complete.cases(activity),]
+f<-tapply(act$steps, act$interval, FUN=mean)
+g<-data.frame(interval=names(f), avg=(f))
+g$interval<-as.numeric(g$interval)
+plot(avg~interval, g, type="l")
 
+f<-tapply(act$steps, act$interval, FUN=mean)
+g<-data.frame(interval=names(f), avg=(f))
+max<-max(g$avg)
+maxInt<-g[g$avg==max, 1]
+maxInt
+
+
+```
 
 ## Imputing missing values
+```{r}
+missing<-sum(is.na(activity$steps))
+missing
 
-
+```
 
 ## Are there differences in activity patterns between weekdays and weekends?
+
+
